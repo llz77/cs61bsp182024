@@ -40,13 +40,51 @@ public class NBody {
         StdDraw.setScale(-raudius, raudius);
 
         /* Clears the drawing window. */
-        StdDraw.clear();
-        StdDraw.picture(0, 0, "images/starfield.jpg");
+//        StdDraw.clear();
+//        StdDraw.picture(0, 0, "images/starfield.jpg");
+//        for (Planet p: Plans) {
+//            p.draw();
+//        }
+//        StdDraw.enableDoubleBuffering();
+//        StdDraw.show();
+        double t = 0;
+        int nums = Plans.length;
 
-        for (Planet p: Plans) {
-            p.draw();
+        while (t < T) {
+            double[] xForces = new double[nums];
+            double[] yForces = new double[nums];
+            for (int i = 0; i < nums; i++) {
+                xForces[i] = Plans[i].calcNetForceExertedByX(Plans);
+                yForces[i] = Plans[i].calcNetForceExertedByY(Plans);
+            }
+            for (int i = 0; i < nums; i++) {
+                Plans[i].update(dt, xForces[i], yForces[i]);
+            }
+
+
+            StdDraw.picture(0, 0, "images/starfield.jpg");
+
+            for (Planet p: Plans) {
+                p.draw();
+            }
+            StdDraw.enableDoubleBuffering();
+            StdDraw.show();
+//            StdDraw.pause(10);
+//            StdDraw.enableDoubleBuffering();
+            t = t + dt;
         }
 
-//        StdDraw.show();
+        StdOut.printf("%d\n", Plans.length);
+        StdOut.printf("%.2e\n", raudius);
+        for (int i = 0; i < Plans.length; i++) {
+            StdOut.printf("%11.4e %11.4e %11.4e %11.4e %11.4e %12s\n",
+                    Plans[i].xxPos, Plans[i].yyPos, Plans[i].xxVel,
+                    Plans[i].yyVel, Plans[i].mass, Plans[i].imgFileName);
+        }
+
+
+
+
+
     }
 }
