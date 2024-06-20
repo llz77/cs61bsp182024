@@ -33,6 +33,22 @@ public class Palindrome {
     }
 
 
+    public boolean isPalindrome(String word, CharacterComparator cc) {
+        if (word == null || word.length() <= 1) {
+            return true;
+        }
+        int wordlength = word.length();
+        Deque worddeque = wordToDeque(word);
+
+        for (int i = 0; i < wordlength / 2; i++) {
+            if (!cc.equalChars(word.charAt(i), word.charAt(wordlength-i-1))) {
+                return false;
+            }
+            worddeque.removeFirst();
+            worddeque.removeLast();
+        }
+        return true;
+    }
 
 
 
