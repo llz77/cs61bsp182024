@@ -5,7 +5,6 @@ public class ArrayDeque<T> {
     private int length;
     private int front;
     private int last;
-
     public ArrayDeque() {
         array = (T[]) new Object[8];
         size = 0;
@@ -75,7 +74,6 @@ public class ArrayDeque<T> {
         last = ptr2;
         array = newArray;
         length /= 2;
-
     }
     public T removeFirst() {
         if (length >= 16 && length / size >= 4) {
