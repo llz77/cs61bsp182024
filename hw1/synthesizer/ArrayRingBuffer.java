@@ -2,6 +2,8 @@ package synthesizer;// TODO: Make sure to make this class a part of the synthesi
 // package <package name>;
 import synthesizer.AbstractBoundedQueue;
 
+import java.util.Iterator;
+
 //TODO: Make sure to make this class and all of its methods public
 //TODO: Make sure to make this class extend AbstractBoundedQueue<t>
 public class ArrayRingBuffer<T> extends AbstractBoundedQueue<T> {
@@ -38,13 +40,12 @@ public class ArrayRingBuffer<T> extends AbstractBoundedQueue<T> {
         if (isFull()) {
             throw new RuntimeException("Ring buffer overflow");
         }
-        rb[last] = x;
-        fillCount += 1;
+        last += 1;
         if (last == capacity) {
             last = 0;
-        } else {
-            last += 1;
         }
+        rb[last] = x;
+        fillCount += 1;
     }
 
     /**
@@ -55,15 +56,13 @@ public class ArrayRingBuffer<T> extends AbstractBoundedQueue<T> {
     public T dequeue() {
         // TODO: Dequeue the first item. Don't forget to decrease fillCount and update
         if (isEmpty()) {
-            throw new RuntimeException("Ring buffer underflow");
+            throw new RuntimeException("Ring Buffer Underflow");
+        }
+        first += 1;
+        if (first == capacity) {first = 0;
         }
         T res = rb[first];
         fillCount -= 1;
-        if (first == capacity) {
-            first = 0;
-        } else {
-            first += 1;
-        }
         return res;
     }
 
@@ -77,6 +76,40 @@ public class ArrayRingBuffer<T> extends AbstractBoundedQueue<T> {
         }
         return rb[first];
     }
+
+    @Override
+    public Iterator<T> iterator() {
+        return new BufferIterator();
+    }
+
+
+    private class BufferIterator implements Iterator<T> {
+        int pos;
+        int num;
+
+        BufferIterator() {
+            pos = first;
+            num = 0;
+        }
+
+        @Override
+        public boolean hasNext() {
+            return num < fillCount;
+        }
+
+        @Override
+        public T next() {
+            T res = rb[pos];
+            pos++;
+            if (pos == capacity) {
+                pos = 0;
+            }
+            num++;
+            return res;
+        }
+
+    }
+
 
     // TODO: When you get to part 5, implement the needed code to support iteration.
 }
